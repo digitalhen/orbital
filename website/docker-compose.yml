@@ -1,6 +1,8 @@
 services:
   orbital-website:
     build: .
+    volumes:
+      - ./downloads:/usr/share/nginx/html/orbital/downloads
     networks:
       - tunnel
     restart: unless-stopped
