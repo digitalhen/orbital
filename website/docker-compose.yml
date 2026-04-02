@@ -1,0 +1,11 @@
+services:
+  orbital-website:
+    build: .
+    networks:
+      - tunnel
+    restart: unless-stopped
+
+networks:
+  tunnel:
+    external: true
+    name: cloudflared-tunnel-macmini_tunnel

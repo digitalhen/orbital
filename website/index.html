@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbital — NASA Mission Tracker for macOS</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVZHZ4N315"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GVZHZ4N315');
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+      background: #0a0e1a;
+      color: #e8e8f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1.5px 1.5px at 10% 80%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1.5px 1.5px at 90% 10%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1.5px 1.5px at 85% 75%, rgba(255,255,255,0.2), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 60px;
+      text-align: center;
+    }
+
+    .icon {
+      width: 128px;
+      height: 128px;
+      border-radius: 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      font-size: 20px;
+      color: #8890a8;
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, #3a7bd5, #2563a8);
+      color: white;
+      text-decoration: none;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 600;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 20px rgba(58,123,213,0.3);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(58,123,213,0.45);
+    }
+
+    .download-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .meta {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #555e78;
+    }
+
+    .features {
+      margin-top: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .feature {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .feature h3 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #d0d4e0;
+    }
+
+    .feature p {
+      font-size: 13px;
+      color: #788098;
+      line-height: 1.5;
+    }
+
+    .mission-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 48px;
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 100px;
+      font-size: 14px;
+      color: #a0a8c0;
+    }
+
+    .mission-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34d058;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .footer {
+      margin-top: 64px;
+      font-size: 13px;
+      color: #3a4058;
+    }
+
+    .footer a {
+      color: #5570a8;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 36px; }
+      .tagline { font-size: 17px; }
+      .features { grid-template-columns: 1fr; }
+      .container { padding: 48px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="container">
+    <img src="icon.png" alt="Orbital" class="icon">
+    <h1>Orbital</h1>
+    <p class="tagline">Track NASA missions in real-time from your macOS menu bar.</p>
+
+    <a href="Orbital-1.0.dmg" class="download-btn">
+      <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-8 4v-2h16v2H4z"/></svg>
+      Download for macOS
+    </a>
+    <p class="meta">macOS 13+ &middot; Universal &middot; 750 KB</p>
+
+    <div class="mission-badge">
+      <span class="dot"></span>
+      Now tracking: Artemis II
+    </div>
+
+    <div class="features">
+      <div class="feature">
+        <h3>Live Telemetry</h3>
+        <p>Real-time altitude, speed, and position data from NASA's AROW tracking system.</p>
+      </div>
+      <div class="feature">
+        <h3>Menu Bar Metrics</h3>
+        <p>Choose which values to show in your menu bar. Multiple items, Stats.app style.</p>
+      </div>
+      <div class="feature">
+        <h3>Mission Phases</h3>
+        <p>See the current phase — from launch through lunar flyby to splashdown.</p>
+      </div>
+      <div class="feature">
+        <h3>Always Up to Date</h3>
+        <p>Mission data is served from a central API. New missions, no app update needed.</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      Built by <a href="https://cleartextlabs.com">Cleartext Labs</a>
+      &middot;
+      <a href="https://buymeacoffee.com/digitalhen">☕ Buy me a coffee</a>
+    </div>
+  </div>
+</body>
+</html>

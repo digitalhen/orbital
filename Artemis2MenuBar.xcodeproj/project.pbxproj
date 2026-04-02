@@ -21,6 +21,7 @@
 		AA000012 /* MissionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015; };
 		AA000013 /* MissionConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016; };
 		AA000014 /* default-config.json in Resources */ = {isa = PBXBuildFile; fileRef = AB000017; };
+		AA000015 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		AB000015 /* MissionConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionConfig.swift; sourceTree = "<group>"; };
 		AB000016 /* MissionConfigService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionConfigService.swift; sourceTree = "<group>"; };
 		AB000017 /* default-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "default-config.json"; sourceTree = "<group>"; };
+		AB000018 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				AB000015 /* MissionConfig.swift */,
 				AB000016 /* MissionConfigService.swift */,
 				AB000017 /* default-config.json */,
+				AB000018 /* Analytics.swift */,
 				AB000007 /* Assets.xcassets */,
 				AB000008 /* Info.plist */,
 				AB000009 /* Artemis2MenuBar.entitlements */,
@@ -175,6 +178,7 @@
 				AA000011 /* MoonPosition.swift in Sources */,
 				AA000012 /* MissionConfig.swift in Sources */,
 				AA000013 /* MissionConfigService.swift in Sources */,
+				AA000015 /* Analytics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -206,6 +206,19 @@ struct MenuBarDetailView: View {
                     .foregroundColor(.secondary)
             }
             Spacer()
+            Button(action: {
+                NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/digitalhen")!)
+            }) {
+                HStack(spacing: 4) {
+                    Text("☕")
+                        .font(.system(size: 11))
+                    Text("Tip")
+                        .font(.system(size: 11))
+                }
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
             }

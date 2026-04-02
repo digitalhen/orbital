@@ -100,9 +100,13 @@ class MissionDataService: ObservableObject {
 
     func toggleMetric(_ id: String) {
         if enabledMetricIDs.contains(id) {
-            if enabledMetricIDs.count > 1 { enabledMetricIDs.remove(id) }
+            if enabledMetricIDs.count > 1 {
+                enabledMetricIDs.remove(id)
+                Analytics.shared.track("metric_toggle", params: ["metric": id, "enabled": "false"])
+            }
         } else {
             enabledMetricIDs.insert(id)
+            Analytics.shared.track("metric_toggle", params: ["metric": id, "enabled": "true"])
         }
     }
 

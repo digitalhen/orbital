@@ -63,6 +63,7 @@ class MissionConfigService: ObservableObject {
             if remote.configVersion >= config.configVersion {
                 config = remote
                 saveToDisk(data)
+                Analytics.shared.track("config_update", params: ["version": "\(remote.configVersion)", "mission": remote.mission.id])
 
                 // Update refresh interval if changed
                 refreshTimer?.invalidate()
