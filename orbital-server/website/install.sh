@@ -6,7 +6,7 @@ echo "Installing Orbital..."
 TMP=$(mktemp -d)
 DMG="$TMP/Orbital.dmg"
 
-curl -fsSL "https://apps.cleartextlabs.com/orbital/Orbital-1.0.dmg" -o "$DMG"
+curl -fsSL "https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.0.dmg" -o "$DMG"
 
 hdiutil attach -nobrowse -quiet "$DMG"
 cp -R "/Volumes/Orbital/Orbital.app" /Applications/
