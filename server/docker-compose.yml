@@ -1,0 +1,13 @@
+services:
+  space-api:
+    build: .
+    volumes:
+      - ./missions:/app/missions
+    networks:
+      - tunnel
+    restart: unless-stopped
+
+networks:
+  tunnel:
+    external: true
+    name: cloudflared-tunnel-macmini_tunnel

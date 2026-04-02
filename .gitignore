@@ -1,0 +1,28 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcworkspace
+xcuserdata/
+
+# Build artifacts
+*.app
+*.dmg
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Icon build
+icon_build/
+dmg_staging/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Node
+server/node_modules/
+
+# Environment
+.env
