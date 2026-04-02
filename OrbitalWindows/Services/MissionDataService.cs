@@ -7,13 +7,21 @@ public class MissionDataService
 {
     private readonly MissionConfigService _configService;
     private TrajectorySimulator _simulator;
+    private TelemetryAPIFetcher? _telemetryFetcher;
 
     private System.Timers.Timer? _updateTimer;
+    private System.Timers.Timer? _telemetryTimer;
 
     public MissionData Data { get; private set; } = new();
     public List<Metric> Metrics { get; private set; } = [];
     public HashSet<string> EnabledMetricIDs { get; private set; } = [];
     public UnitSystem Units { get; set; } = UnitSystem.Imperial;
+    public bool IsLive { get; private set; }
+    public DateTime? LastTelemetryUpdate { get; private set; }
+
+    private double? _liveAltitude;
+    private double? _liveMoonDist;
+    private double? _liveSpeed;
 
     public event Action? DataChanged;
     public event Action? MetricsChanged;
@@ -28,6 +36,8 @@ public class MissionDataService
         var config = _configService.Config;
 
         _simulator = new TrajectorySimulator(config);
+        if (config.DataSourcesInfo.TelemetryEndpoint is string endpoint)
+            _telemetryFetcher = new TelemetryAPIFetcher(endpoint);
         Metrics = config.Metrics;
 
         LoadSettings(config);
@@ -35,6 +45,7 @@ public class MissionDataService
 
         _configService.ConfigUpdated += OnConfigUpdate;
         StartUpdating();
+        StartTelemetryPolling(config);
         _configService.StartPeriodicRefresh();
     }
 
@@ -100,6 +111,24 @@ public class MissionDataService
     private void OnConfigUpdate(MissionConfig config)
     {
         _simulator = new TrajectorySimulator(config);
+
+        if (config.DataSourcesInfo.TelemetryEndpoint is string endpoint)
+        {
+            if (_telemetryFetcher != null)
+                _telemetryFetcher.Reconfigure(endpoint);
+            else
+                _telemetryFetcher = new TelemetryAPIFetcher(endpoint);
+        }
+        else
+        {
+            _telemetryFetcher = null;
+        }
+
+        _liveAltitude = null;
+        _liveMoonDist = null;
+        _liveSpeed = null;
+
+        StartTelemetryPolling(config);
         ApplyConfig(config);
         MetricsChanged?.Invoke();
     }
@@ -135,11 +164,46 @@ public class MissionDataService
         var simData = _simulator.GetData(DateTime.UtcNow);
         Data.MissionElapsedTime = simData.MissionElapsedTime;
         Data.Phase = simData.Phase;
-        Data.DistanceFromEarth = simData.DistanceFromEarth;
-        Data.DistanceFromMoon = simData.DistanceFromMoon;
-        Data.Speed = simData.Speed;
+        Data.DistanceFromEarth = _liveAltitude ?? simData.DistanceFromEarth;
+        Data.DistanceFromMoon = _liveMoonDist ?? simData.DistanceFromMoon;
+        Data.Speed = _liveSpeed ?? simData.Speed;
         Data.UpdateBuiltInValues();
         DataChanged?.Invoke();
+    }
+
+    private void StartTelemetryPolling(MissionConfig config)
+    {
+        _telemetryTimer?.Stop();
+        _telemetryTimer?.Dispose();
+
+        if (_telemetryFetcher == null) return;
+
+        var interval = Math.Max(config.DataSourcesInfo.Telemetry.PollInterval, 10) * 1000;
+        _telemetryTimer = new System.Timers.Timer(interval);
+        _telemetryTimer.Elapsed += async (_, _) => await FetchTelemetryAsync();
+        _telemetryTimer.AutoReset = true;
+        _telemetryTimer.Start();
+
+        // Initial fetch
+        _ = FetchTelemetryAsync();
+    }
+
+    private async Task FetchTelemetryAsync()
+    {
+        if (_telemetryFetcher == null) return;
+
+        var telemetry = await _telemetryFetcher.FetchAsync();
+        if (telemetry == null) return;
+
+        IsLive = telemetry.IsLive;
+        LastTelemetryUpdate = DateTime.UtcNow;
+
+        if (telemetry.Altitude > 0)
+            _liveAltitude = telemetry.Altitude;
+        if (telemetry.DistanceToMoon > 0)
+            _liveMoonDist = telemetry.DistanceToMoon;
+        if (telemetry.Speed > 0.01)
+            _liveSpeed = telemetry.Speed;
     }
 
     private class AppSettings

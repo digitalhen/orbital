@@ -84,6 +84,9 @@ public class DataSources
 
     [JsonPropertyName("moonPosition")]
     public MoonPositionSource? MoonPosition { get; set; }
+
+    [JsonPropertyName("telemetryEndpoint")]
+    public string? TelemetryEndpoint { get; set; }
 }
 
 public class TelemetrySource
