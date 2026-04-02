@@ -27,6 +27,7 @@ struct MissionConfig: Codable {
     struct DataSources: Codable {
         var telemetry: TelemetrySource
         var moonPosition: MoonPositionSource?
+        var telemetryEndpoint: String? // Pre-computed telemetry API URL
     }
 
     struct TelemetrySource: Codable {

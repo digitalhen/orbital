@@ -18,6 +18,7 @@ class MissionDataService: ObservableObject {
 
     private var simulator: TrajectorySimulator
     private var arowFetcher: AROWFetcher
+    private var telemetryFetcher: TelemetryAPIFetcher?
     private var earthRadius: Double
     private var timer: Timer?
     private var arowTimer: Timer?
@@ -34,6 +35,9 @@ class MissionDataService: ObservableObject {
         let config = cs.config
         simulator = TrajectorySimulator(config: config)
         arowFetcher = AROWFetcher(config: config)
+        if let endpoint = config.dataSources.telemetryEndpoint {
+            telemetryFetcher = TelemetryAPIFetcher(endpointURL: endpoint)
+        }
         earthRadius = config.earthRadius
         metrics = config.metrics
 
@@ -85,6 +89,15 @@ class MissionDataService: ObservableObject {
         simulator = TrajectorySimulator(config: config)
         earthRadius = config.earthRadius
         Task { await arowFetcher.reconfigure(config: config) }
+        if let endpoint = config.dataSources.telemetryEndpoint {
+            if let existing = telemetryFetcher {
+                Task { await existing.reconfigure(endpointURL: endpoint) }
+            } else {
+                telemetryFetcher = TelemetryAPIFetcher(endpointURL: endpoint)
+            }
+        } else {
+            telemetryFetcher = nil
+        }
         applyConfig(config)
 
         liveAltitude = nil
@@ -138,6 +151,25 @@ class MissionDataService: ObservableObject {
 
     private func fetchAROWData() {
         Task {
+            // Prefer pre-computed telemetry API when available
+            if let fetcher = telemetryFetcher, let telemetry = await fetcher.fetch() {
+                await MainActor.run {
+                    self.isLive = telemetry.isLive
+                    self.lastAROWUpdate = Date()
+                    if telemetry.altitude > 0 {
+                        self.liveAltitude = telemetry.altitude
+                    }
+                    if telemetry.distanceToMoon > 0 {
+                        self.liveMoonDist = telemetry.distanceToMoon
+                    }
+                    if telemetry.speed > 0.01 {
+                        self.liveSpeed = telemetry.speed
+                    }
+                }
+                return
+            }
+
+            // Fallback: direct AROW fetch for old configs without telemetryEndpoint
             if let arowData = await arowFetcher.fetch() {
                 await MainActor.run {
                     self.isLive = arowData.isLive
