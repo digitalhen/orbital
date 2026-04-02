@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Orbital — NASA Mission Tracker for macOS</title>
+  <title>Orbital — NASA Mission Tracker for macOS &amp; Windows</title>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GVZHZ4N315"></script>
   <script>
@@ -92,14 +92,30 @@
       box-shadow: 0 6px 28px rgba(58,123,213,0.45);
     }
 
-    .download-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
+    .download-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .download-btn-win {
+      background: linear-gradient(135deg, #4a6cf7, #3b5de7);
+      box-shadow: 0 4px 20px rgba(74,108,247,0.3);
+    }
+
+    .download-btn-win:hover {
+      box-shadow: 0 6px 28px rgba(74,108,247,0.45);
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 12px;
     }
 
     .meta {
-      margin-top: 12px;
       font-size: 13px;
       color: #555e78;
     }
@@ -221,15 +237,24 @@
   <div class="container">
     <img src="icon.png" alt="Orbital" class="icon">
     <h1>Orbital</h1>
-    <p class="tagline">Track NASA missions in real-time from your macOS menu bar.</p>
+    <p class="tagline">Track NASA missions in real-time from your menu bar.</p>
 
-    <a href="Orbital-1.0.dmg" class="download-btn">
-      <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-8 4v-2h16v2H4z"/></svg>
-      Download for macOS
-    </a>
-    <p class="meta">macOS 13+ &middot; Universal &middot; 750 KB</p>
+    <div class="download-buttons">
+      <a href="Orbital-1.0.dmg" class="download-btn">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Download for macOS
+      </a>
+      <a href="Orbital-1.0.msi" class="download-btn download-btn-win">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 12V6.75l6-1.32v6.48L3 12zm6.13.51l.01 6.42-6.14-.72V12.6l6.13-.09zm.71-7.83L21 3v8.89l-11.16.1V4.68zM21 12.22L21 21l-11.16-1.56V12.2L21 12.22z"/></svg>
+        Download for Windows
+      </a>
+    </div>
+    <div class="meta-row">
+      <p class="meta">macOS 13+ &middot; Universal &middot; 750 KB</p>
+      <p class="meta">Windows 10+ &middot; x64 &middot; 1.5 MB</p>
+    </div>
 
-    <p class="meta" style="margin-top: 16px; color: #6a7290;">or install from Terminal:</p>
+    <p class="meta" style="margin-top: 16px; color: #6a7290;">or install on macOS from Terminal:</p>
     <code class="install-cmd" onclick="navigator.clipboard.writeText('curl -fsSL https://apps.cleartextlabs.com/orbital/install.sh | bash');this.textContent='Copied!';setTimeout(()=>this.textContent='curl -fsSL https://apps.cleartextlabs.com/orbital/install.sh | bash',1500)">curl -fsSL https://apps.cleartextlabs.com/orbital/install.sh | bash</code>
 
     <div class="screenshots">
@@ -248,7 +273,7 @@
       </div>
       <div class="feature">
         <h3>Menu Bar Metrics</h3>
-        <p>Choose which values to show in your menu bar. Multiple items, Stats.app style.</p>
+        <p>Choose which values to show in your menu bar or taskbar. Multiple items at a glance.</p>
       </div>
       <div class="feature">
         <h3>Mission Phases</h3>

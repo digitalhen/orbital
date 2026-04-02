@@ -7,7 +7,6 @@ xcuserdata/
 
 # Build artifacts
 *.app
-*.dmg
 *.ipa
 *.dSYM.zip
 *.dSYM
@@ -22,7 +21,7 @@ dmg_staging/
 *~
 
 # Node
-server/node_modules/
+orbital-server/api/node_modules/
 
 # Environment
 .env

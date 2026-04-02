@@ -3,7 +3,10 @@
 ## Project Structure
 
 - `Artemis2MenuBar/` — macOS menu bar app (Swift/SwiftUI, Xcode project)
-- `server/` — Config API backend (Node.js, Docker)
+- `OrbitalWindows/` — Windows system tray app (C#/WPF, .NET)
+- `orbital-server/` — Backend services (Docker Compose)
+  - `api/` — Config & telemetry API (Node.js)
+  - `website/` — Landing page (nginx)
 - `icon.svg` — App icon source
 
 ## Architecture
@@ -39,10 +42,10 @@ xcodebuild -project Artemis2MenuBar.xcodeproj -scheme Artemis2MenuBar -configura
 ## Server
 
 ```bash
-cd server && docker compose up -d --build
+cd orbital-server && docker compose up -d --build
 ```
 
-Edit `server/missions/active.json` to update all clients. The server reads from disk on every request.
+Edit `orbital-server/api/missions/active.json` to update all clients. The server reads from disk on every request.
 
 ## DMG
 
@@ -64,4 +67,4 @@ hdiutil create -volname "Orbital" -srcfolder dmg_staging -ov -format UDZO Orbita
 - `StatusBarController.swift` — multiple NSStatusItems, one per enabled metric
 - `MenuBarDetailView.swift` — popover UI, all sections driven by config/metrics
 - `MetricType.swift` — Metric and MetricValue types (dynamic, not an enum)
-- `server/missions/active.json` — the live config served to all clients
+- `orbital-server/api/missions/active.json` — the live config served to all clients

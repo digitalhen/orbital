@@ -1,6 +1,14 @@
 services:
+  space-api:
+    build: ./api
+    volumes:
+      - ./api/missions:/app/missions
+    networks:
+      - tunnel
+    restart: unless-stopped
+
   orbital-website:
-    build: .
+    build: ./website
     volumes:
       - ./downloads:/usr/share/nginx/html/orbital/downloads
     networks:
