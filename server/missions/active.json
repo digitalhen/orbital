@@ -17,16 +17,21 @@
   },
   "dataSources": {
     "telemetry": {
-      "url": "https://storage.googleapis.com/storage/v1/b/p-2-cen1/o/October%2F1%2FOctober_105_1.txt?alt=media",
+      "url": "https://api.cleartextlabs.com/space/api/v1/proxy/telemetry",
       "positionParams": ["2003", "2004", "2005"],
       "positionUnit": "feet",
       "activityField": "MIS",
       "pollInterval": 30
     },
     "moonPosition": {
-      "horizonsURL": "https://ssd.jpl.nasa.gov/api/horizons.api",
+      "horizonsURL": "https://api.cleartextlabs.com/space/api/v1/proxy/horizons",
       "refreshInterval": 3600
-    }
+    },
+    "telemetryEndpoint": "https://api.cleartextlabs.com/space/api/v1/mission/telemetry"
+  },
+  "_upstreamSources": {
+    "telemetry": "https://storage.googleapis.com/storage/v1/b/p-2-cen1/o/October%2F1%2FOctober_105_1.txt?alt=media",
+    "horizons": "https://ssd.jpl.nasa.gov/api/horizons.api"
   },
   "metrics": [
     { "id": "phase", "label": "Mission Phase", "shortLabel": "", "icon": "moon.stars", "format": "text", "source": "phase", "enabledByDefault": true },
