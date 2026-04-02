@@ -26,3 +26,8 @@ server/node_modules/
 
 # Environment
 .env
+
+# Build artifacts
+Orbital-*.pkg
+Orbital-notarize.zip
+website/screenshot-*.png
