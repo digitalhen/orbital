@@ -113,6 +113,7 @@
       gap: 40px;
       justify-content: center;
       margin-top: 12px;
+      text-align: center;
     }
 
     .meta {
@@ -230,9 +231,37 @@
       .features { grid-template-columns: 1fr; }
       .container { padding: 48px 20px 40px; }
     }
+    .coffee-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #1a1a1a;
+      background: #ffdd00;
+      border: 1px solid rgba(255,221,0,0.6);
+      box-shadow: 0 0 12px rgba(255,221,0,0.15);
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: brightness 0.15s;
+    }
+
+    .coffee-btn:hover {
+      brightness: 1.1;
+      text-decoration: none;
+    }
+
   </style>
 </head>
 <body>
+  <a href="https://buymeacoffee.com/digitalhen" target="_blank" rel="noopener noreferrer" class="coffee-btn">☕ Buy me a coffee</a>
   <div class="stars"></div>
   <div class="container">
     <img src="icon.png" alt="Orbital" class="icon">
@@ -287,8 +316,6 @@
 
     <div class="footer">
       Built by <a href="https://cleartextlabs.com">Cleartext Labs</a>
-      &middot;
-      <a href="https://buymeacoffee.com/digitalhen">☕ Buy me a coffee</a>
     </div>
   </div>
 </body>
