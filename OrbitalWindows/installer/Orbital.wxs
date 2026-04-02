@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <Package Name="Orbital"
+           Manufacturer="ClearText Labs"
+           Version="1.0.0"
+           UpgradeCode="8F4E2A1B-3C5D-4E6F-A7B8-9C0D1E2F3A4B">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Orbital is already installed." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="Main" Title="Orbital" Level="1">
+      <ComponentRef Id="OrbitalExe" />
+      <ComponentRef Id="StartMenuShortcut" />
+      <ComponentRef Id="AutoStart" />
+    </Feature>
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Orbital">
+        <Component Id="OrbitalExe" Guid="A1B2C3D4-1111-2222-3333-444455556666">
+          <File Id="OrbitalExe" Source="$(var.PublishDir)\Orbital.exe" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="OrbitalMenuFolder" Name="Orbital">
+        <Component Id="StartMenuShortcut" Guid="A1B2C3D4-7777-8888-9999-AAAABBBBCCCC">
+          <Shortcut Id="OrbitalShortcut"
+                    Name="Orbital"
+                    Description="NASA Mission Tracker"
+                    Target="[INSTALLFOLDER]Orbital.exe"
+                    WorkingDirectory="INSTALLFOLDER" />
+          <RemoveFolder Id="RemoveMenuFolder" On="uninstall" />
+          <RegistryValue Root="HKCU" Key="Software\Orbital" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <!-- Auto-start on login -->
+    <Component Id="AutoStart" Directory="INSTALLFOLDER" Guid="A1B2C3D4-AAAA-BBBB-CCCC-DDDDEEEEFFFF">
+      <RegistryValue Root="HKCU"
+                     Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+                     Name="Orbital"
+                     Type="string"
+                     Value="&quot;[INSTALLFOLDER]Orbital.exe&quot;"
+                     KeyPath="yes" />
+    </Component>
+
+    <!-- Launch app after install -->
+    <CustomAction Id="LaunchOrbital"
+                  FileRef="OrbitalExe"
+                  ExeCommand=""
+                  Return="asyncNoWait" />
+
+    <InstallExecuteSequence>
+      <Custom Action="LaunchOrbital" After="InstallFinalize" Condition="NOT Installed OR REINSTALL" />
+    </InstallExecuteSequence>
+
+  </Package>
+</Wix>

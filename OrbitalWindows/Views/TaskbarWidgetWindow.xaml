@@ -1,0 +1,28 @@
+<Window x:Class="Orbital.Views.TaskbarWidgetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Orbital Widget"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        ResizeMode="NoResize"
+        SizeToContent="Width"
+        Height="34"
+        MouseLeftButtonDown="Widget_MouseDown">
+    <Border x:Name="WidgetBorder"
+            Background="#DD1E1E1E"
+            BorderBrush="#40FFFFFF"
+            BorderThickness="1"
+            CornerRadius="17"
+            Padding="12,0,12,0"
+            Cursor="Hand">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.4"/>
+        </Border.Effect>
+        <StackPanel x:Name="MetricsBar"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"/>
+    </Border>
+</Window>
