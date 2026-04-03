@@ -55,7 +55,26 @@ function proxyGet(fetchURL, res) {
 // --- Phase derivation from live telemetry ---
 let prevPollData = null;
 
-function derivePhase(met, altitude, distanceToMoon, speed, missionDuration) {
+function waypointPhase(met, config) {
+  const waypoints = config.trajectory?.waypoints;
+  if (!waypoints || waypoints.length === 0) return null;
+
+  // Before first waypoint
+  if (met <= waypoints[0].met) return waypoints[0].phase;
+
+  // After last waypoint
+  if (met >= waypoints[waypoints.length - 1].met)
+    return waypoints[waypoints.length - 1].phase;
+
+  // Between waypoints — use the phase of the waypoint we've passed
+  for (let i = waypoints.length - 2; i >= 0; i--) {
+    if (met >= waypoints[i].met) return waypoints[i].phase;
+  }
+
+  return null;
+}
+
+function derivePhase(met, altitude, distanceToMoon, speed, missionDuration, config) {
   const moonApproaching =
     prevPollData &&
     distanceToMoon > 0 &&
@@ -93,7 +112,8 @@ function derivePhase(met, altitude, distanceToMoon, speed, missionDuration) {
   if (speed > 10 && altitude < 2000 && altitude > 160)
     return "translunarInjection";
 
-  return "earthOrbit";
+  // Fall back to config waypoint phase instead of guessing
+  return waypointPhase(met, config) || "earthOrbit";
 }
 
 // --- Telemetry polling ---
@@ -193,7 +213,7 @@ async function pollTelemetry() {
       const launchTime = new Date(config.mission.launchDate).getTime();
       const met = (Date.now() - launchTime) / 1000;
       const missionDuration = config.mission.missionDuration || 788400;
-      phase = derivePhase(met, altitude, distanceToMoon, arow.speed, missionDuration);
+      phase = derivePhase(met, altitude, distanceToMoon, arow.speed, missionDuration, config);
     }
 
     prevPollData = { distanceToMoon, altitude, speed: arow.speed };

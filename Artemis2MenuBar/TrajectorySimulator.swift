@@ -63,7 +63,7 @@ class TrajectorySimulator {
         data.distanceFromEarth = max(0, lerp(wp0.distanceFromEarth, wp1.distanceFromEarth, s) - earthRadius)
         data.distanceFromMoon = max(0, lerp(wp0.distanceFromMoon, wp1.distanceFromMoon, s) - moonRadius)
         data.speed = lerp(wp0.speed, wp1.speed, s)
-        data.phase = resolvePhase(t < 0.5 ? wp0.phase : wp1.phase)
+        data.phase = resolvePhase(wp0.phase)
 
         return data
     }
