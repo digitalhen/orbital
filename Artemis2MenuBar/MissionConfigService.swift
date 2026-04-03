@@ -4,6 +4,8 @@ import Combine
 @MainActor
 class MissionConfigService: ObservableObject {
     @Published var config: MissionConfig
+    @Published var updateRequired: Bool = false
+    @Published var updateURL: String?
 
     private let configURL = "https://api.cleartextlabs.com/space/api/v1/mission/active"
 
@@ -65,6 +67,9 @@ class MissionConfigService: ObservableObject {
                 saveToDisk(data)
                 Analytics.shared.track("config_update", params: ["version": "\(remote.configVersion)", "mission": remote.mission.id])
 
+                // Check if client version is below minimum
+                checkMinVersion(remote)
+
                 // Update refresh interval if changed
                 refreshTimer?.invalidate()
                 startPeriodicRefresh()
@@ -72,6 +77,13 @@ class MissionConfigService: ObservableObject {
         } catch {
             // Silently fail — keep using cached/bundled config
         }
+    }
+
+    private func checkMinVersion(_ remote: MissionConfig) {
+        guard let minVersion = remote.minClientVersion,
+              let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else { return }
+        updateURL = remote.updateURL
+        updateRequired = appVersion.compare(minVersion, options: .numeric) == .orderedAscending
     }
 
     private func saveToDisk(_ data: Data) {

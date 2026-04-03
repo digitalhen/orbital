@@ -8,6 +8,9 @@ struct MenuBarDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             headerSection
+            if service.configService.updateRequired {
+                updateBanner
+            }
             Divider()
             phaseSection
             Divider()
@@ -52,6 +55,31 @@ struct MenuBarDetailView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
+    }
+
+    // MARK: - Update Banner
+
+    private var updateBanner: some View {
+        Button(action: {
+            if let urlStr = service.configService.updateURL,
+               let url = URL(string: urlStr) {
+                NSWorkspace.shared.open(url)
+            }
+        }) {
+            HStack(spacing: 6) {
+                Image(systemName: "arrow.down.circle.fill")
+                    .font(.system(size: 12))
+                Text("Update available — tap to download")
+                    .font(.system(size: 12, weight: .medium))
+                Spacer()
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity)
+            .background(Color.accentColor.opacity(0.15))
+        }
+        .buttonStyle(.plain)
+        .foregroundColor(.accentColor)
     }
 
     // MARK: - Phase

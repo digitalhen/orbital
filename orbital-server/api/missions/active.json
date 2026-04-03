@@ -1,6 +1,8 @@
 {
   "configVersion": 1,
   "refreshInterval": 3600,
+  "minClientVersion": "1.0",
+  "updateURL": "https://orbital.cleartextlabs.com/orbital",
   "mission": {
     "id": "artemis-2",
     "name": "Artemis II",

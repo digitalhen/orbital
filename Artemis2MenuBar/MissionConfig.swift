@@ -3,6 +3,8 @@ import Foundation
 struct MissionConfig: Codable {
     var configVersion: Int
     var refreshInterval: TimeInterval
+    var minClientVersion: String?
+    var updateURL: String?
     var mission: Mission
     var dataSources: DataSources
     var metrics: [Metric]
