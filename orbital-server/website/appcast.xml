@@ -3,12 +3,12 @@
     <channel>
         <title>Orbital</title>
         <item>
-            <title>1.1</title>
-            <pubDate>Fri, 03 Apr 2026 14:12:36 -0400</pubDate>
-            <sparkle:version>1</sparkle:version>
-            <sparkle:shortVersionString>1.1</sparkle:shortVersionString>
+            <title>1.2</title>
+            <pubDate>Fri, 03 Apr 2026 14:16:38 -0400</pubDate>
+            <sparkle:version>3</sparkle:version>
+            <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.1.dmg" length="1839557" type="application/octet-stream" sparkle:edSignature="9RvsqNLC5aBBIvlf+aLphuU3A3mpxwjfsTXq+2zvxmHyS1zsdKwf2+LSFjY2Q8I+r5lxgUZXoXa4CMEHKdi3Dg=="/>
+            <enclosure url="https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.2.dmg" length="1837122" type="application/octet-stream" sparkle:edSignature="XdRy7FR3bgla12XQqF8d7PjWxaUvrA0qqY4l+BKPkEbjo7EEzxkai7d+hMCT2IxjKW1zboL7q2gd78+uAhwxBA=="/>
         </item>
     </channel>
 </rss>
