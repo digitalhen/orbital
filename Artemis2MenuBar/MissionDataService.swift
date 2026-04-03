@@ -27,6 +27,7 @@ class MissionDataService: ObservableObject {
     private var liveAltitude: Double?
     private var liveMoonDist: Double?
     private var liveSpeed: Double?
+    private var livePhase: MissionPhaseInfo?
 
     init() {
         let cs = MissionConfigService()
@@ -103,6 +104,7 @@ class MissionDataService: ObservableObject {
         liveAltitude = nil
         liveMoonDist = nil
         liveSpeed = nil
+        livePhase = nil
 
         arowTimer?.invalidate()
         let interval = max(config.dataSources.telemetry.pollInterval, 10)
@@ -142,7 +144,7 @@ class MissionDataService: ObservableObject {
     private func updateData() {
         let simData = simulator.getData(at: Date())
         data.missionElapsedTime = simData.missionElapsedTime
-        data.phase = simData.phase
+        data.phase = livePhase ?? simData.phase
         data.distanceFromEarth = liveAltitude ?? simData.distanceFromEarth
         data.distanceFromMoon = liveMoonDist ?? simData.distanceFromMoon
         data.speed = liveSpeed ?? simData.speed
@@ -165,6 +167,9 @@ class MissionDataService: ObservableObject {
                     if telemetry.speed > 0.01 {
                         self.liveSpeed = telemetry.speed
                     }
+                    if let phaseId = telemetry.phase {
+                        self.livePhase = self.resolvePhase(phaseId)
+                    }
                 }
                 return
             }
@@ -186,6 +191,13 @@ class MissionDataService: ObservableObject {
                 }
             }
         }
+    }
+
+    private func resolvePhase(_ id: String) -> MissionPhaseInfo {
+        if let p = configService.config.phases.first(where: { $0.id == id }) {
+            return MissionPhaseInfo(id: p.id, name: p.name, description: p.description, icon: p.icon)
+        }
+        return MissionPhaseInfo(id: id, name: id, description: "", icon: "questionmark.circle")
     }
 
     deinit {

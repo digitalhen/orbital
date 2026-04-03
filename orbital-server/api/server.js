@@ -52,6 +52,50 @@ function proxyGet(fetchURL, res) {
     });
 }
 
+// --- Phase derivation from live telemetry ---
+let prevPollData = null;
+
+function derivePhase(met, altitude, distanceToMoon, speed, missionDuration) {
+  const moonApproaching =
+    prevPollData &&
+    distanceToMoon > 0 &&
+    prevPollData.distanceToMoon > 0
+      ? distanceToMoon < prevPollData.distanceToMoon
+      : null;
+
+  if (met < 0) return "prelaunch";
+  if (met < 600) return "ascent";
+  if (met >= missionDuration) return "missionComplete";
+
+  // Splashdown — near surface, slow, late in mission
+  if (altitude < 50 && speed < 0.5 && met > missionDuration * 0.9)
+    return "splashdown";
+
+  // Reentry — low altitude, high speed, late in mission
+  if (altitude < 200 && speed > 3 && met > missionDuration * 0.8)
+    return "reentry";
+
+  // Lunar flyby — very close to Moon
+  if (distanceToMoon > 0 && distanceToMoon < 10000) return "lunarFlyby";
+
+  // Lunar approach — closing on Moon within 50k km
+  if (distanceToMoon > 0 && distanceToMoon < 50000 && moonApproaching === true)
+    return "lunarApproach";
+
+  // Return coast — receding from Moon, past mid-mission
+  if (moonApproaching === false && met > missionDuration * 0.4)
+    return "returnCoast";
+
+  // Outbound coast — heading toward Moon, well above low Earth orbit
+  if (moonApproaching === true && altitude > 2000) return "outboundCoast";
+
+  // TLI — high speed near Earth (brief burn, may not always be caught)
+  if (speed > 10 && altitude < 2000 && altitude > 160)
+    return "translunarInjection";
+
+  return "earthOrbit";
+}
+
 // --- Telemetry polling ---
 let arowFetcher = null;
 let moonService = null;
@@ -143,19 +187,16 @@ async function pollTelemetry() {
       };
     }
 
-    // Determine current phase from waypoints
+    // Derive phase from live telemetry
     let phase = null;
-    if (config.mission?.launchDate && config.trajectory?.waypoints) {
+    if (config.mission?.launchDate) {
       const launchTime = new Date(config.mission.launchDate).getTime();
       const met = (Date.now() - launchTime) / 1000;
-      const waypoints = config.trajectory.waypoints;
-      for (let i = waypoints.length - 1; i >= 0; i--) {
-        if (met >= waypoints[i].met) {
-          phase = waypoints[i].phase;
-          break;
-        }
-      }
+      const missionDuration = config.mission.missionDuration || 788400;
+      phase = derivePhase(met, altitude, distanceToMoon, arow.speed, missionDuration);
     }
+
+    prevPollData = { distanceToMoon, altitude, speed: arow.speed };
 
     latestTelemetry = {
       timestamp: new Date().toISOString(),
