@@ -3,19 +3,10 @@ services:
     build: ./api
     volumes:
       - ./api/missions:/app/missions
-    networks:
-      - tunnel
     restart: unless-stopped
 
   orbital-website:
     build: ./website
     volumes:
       - ./downloads:/usr/share/nginx/html/orbital/downloads
-    networks:
-      - tunnel
     restart: unless-stopped
-
-networks:
-  tunnel:
-    external: true
-    name: cloudflared-tunnel-macmini_tunnel
