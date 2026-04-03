@@ -23,6 +23,8 @@
 		AA000014 /* default-config.json in Resources */ = {isa = PBXBuildFile; fileRef = AB000017; };
 		AA000015 /* Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018; };
 		AA000016 /* TelemetryAPIFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019; };
+		AA000017 /* UpdateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020; };
+		AA000018 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = SP000001; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,7 @@
 		AB000017 /* default-config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "default-config.json"; sourceTree = "<group>"; };
 		AB000018 /* Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Analytics.swift; sourceTree = "<group>"; };
 		AB000019 /* TelemetryAPIFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryAPIFetcher.swift; sourceTree = "<group>"; };
+		AB000020 /* UpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000018 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +88,7 @@
 				AB000017 /* default-config.json */,
 				AB000018 /* Analytics.swift */,
 				AB000019 /* TelemetryAPIFetcher.swift */,
+				AB000020 /* UpdateController.swift */,
 				AB000007 /* Assets.xcassets */,
 				AB000008 /* Info.plist */,
 				AB000009 /* Artemis2MenuBar.entitlements */,
@@ -115,6 +120,9 @@
 			dependencies = (
 			);
 			name = Artemis2MenuBar;
+			packageProductDependencies = (
+				SP000001 /* Sparkle */,
+			);
 			productName = Artemis2MenuBar;
 			productReference = AB000010 /* Artemis2MenuBar.app */;
 			productType = "com.apple.product-type.application";
@@ -143,6 +151,9 @@
 				Base,
 			);
 			mainGroup = AD000001;
+			packageReferences = (
+				SP000010 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			productRefGroup = AD000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -183,6 +194,7 @@
 				AA000013 /* MissionConfigService.swift in Sources */,
 				AA000015 /* Analytics.swift in Sources */,
 				AA000016 /* TelemetryAPIFetcher.swift in Sources */,
+				AA000017 /* UpdateController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,6 +398,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		SP000010 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		SP000001 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = SP000010 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 	};
 	rootObject = AE000010 /* Project object */;

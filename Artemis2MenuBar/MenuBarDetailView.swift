@@ -3,6 +3,7 @@ import ServiceManagement
 
 struct MenuBarDetailView: View {
     @ObservedObject var service: MissionDataService
+    @ObservedObject var updateController: UpdateController
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
 
     var body: some View {
@@ -61,15 +62,12 @@ struct MenuBarDetailView: View {
 
     private var updateBanner: some View {
         Button(action: {
-            if let urlStr = service.configService.updateURL,
-               let url = URL(string: urlStr) {
-                NSWorkspace.shared.open(url)
-            }
+            updateController.checkForUpdates()
         }) {
             HStack(spacing: 6) {
                 Image(systemName: "arrow.down.circle.fill")
                     .font(.system(size: 12))
-                Text("Update available — tap to download")
+                Text("Update available — tap to install")
                     .font(.system(size: 12, weight: .medium))
                 Spacer()
             }
@@ -234,6 +232,14 @@ struct MenuBarDetailView: View {
                     .foregroundColor(.secondary)
             }
             Spacer()
+            Button("Update") {
+                updateController.checkForUpdates()
+            }
+            .buttonStyle(.plain)
+            .font(.system(size: 11))
+            .foregroundColor(.secondary)
+            .disabled(!updateController.canCheckForUpdates)
+
             Button(action: {
                 NSWorkspace.shared.open(URL(string: "https://buymeacoffee.com/digitalhen")!)
             }) {

@@ -6,11 +6,13 @@ import Combine
 class StatusBarController: NSObject {
     private var statusItems: [String: NSStatusItem] = [:]
     private let missionService = MissionDataService()
+    private let updateController: UpdateController
     private var cancellables = Set<AnyCancellable>()
     private var popover = NSPopover()
     private var eventMonitor: Any?
 
-    override init() {
+    init(updateController: UpdateController) {
+        self.updateController = updateController
         super.init()
         setupPopover()
 
@@ -126,7 +128,7 @@ class StatusBarController: NSObject {
     }
 
     private func showPopover(_ sender: NSStatusBarButton) {
-        let hostingView = NSHostingController(rootView: MenuBarDetailView(service: missionService))
+        let hostingView = NSHostingController(rootView: MenuBarDetailView(service: missionService, updateController: updateController))
         hostingView.sizingOptions = .preferredContentSize
         popover.contentViewController = hostingView
         popover.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)

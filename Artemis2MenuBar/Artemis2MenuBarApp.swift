@@ -12,11 +12,14 @@ struct MissionTrackerApp: App {
     }
 }
 
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarController: StatusBarController!
+    var updateController: UpdateController!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        statusBarController = StatusBarController()
+        updateController = UpdateController()
+        statusBarController = StatusBarController(updateController: updateController)
         Analytics.shared.track("app_launch")
     }
 }

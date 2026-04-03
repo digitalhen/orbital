@@ -22,6 +22,16 @@
 	<string>13.0</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>SUFeedURL</key>
+	<string>https://apps.cleartextlabs.com/orbital/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>kfnnicvmSp/Ya4BsHnp66K6DQtmAaGppupoFE/d71gU=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUAutomaticallyUpdate</key>
+	<false/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>3600</integer>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
