@@ -26,6 +26,12 @@ public class MissionConfig
     [JsonPropertyName("trajectory")]
     public Trajectory TrajectoryInfo { get; set; } = new();
 
+    [JsonPropertyName("minClientVersion")]
+    public string? MinClientVersion { get; set; }
+
+    [JsonPropertyName("updateURL")]
+    public string? UpdateURL { get; set; }
+
     // Helpers
     [JsonIgnore]
     public DateTime? LaunchDate

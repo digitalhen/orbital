@@ -18,6 +18,14 @@
         </Border.Effect>
         <StackPanel x:Name="RootPanel" Margin="0">
 
+            <!-- Update Banner -->
+            <Border x:Name="UpdateBanner" Background="#FFF3CD" CornerRadius="4"
+                    Margin="10,8,10,0" Padding="10,6" Visibility="Collapsed" Cursor="Hand"
+                    MouseLeftButtonUp="UpdateBanner_Click">
+                <TextBlock x:Name="UpdateBannerText" FontSize="12" TextWrapping="Wrap"
+                           Foreground="#856404" Text="A new version of Orbital is available. Click to update."/>
+            </Border>
+
             <!-- Header -->
             <Grid Margin="14,10,14,10">
                 <Grid.ColumnDefinitions>

@@ -14,6 +14,7 @@ public class MissionConfigService
 
     public MissionConfig Config { get; private set; }
     public event Action<MissionConfig>? ConfigUpdated;
+    public event Action<string>? UpdateRequired; // fires with updateURL when client is behind minClientVersion
 
     public MissionConfigService()
     {
@@ -58,6 +59,7 @@ public class MissionConfigService
                 Config = remote;
                 SaveToDisk(response);
                 ConfigUpdated?.Invoke(remote);
+                CheckMinVersion(remote);
 
                 // Update refresh interval
                 _refreshTimer?.Dispose();
@@ -84,6 +86,20 @@ public class MissionConfigService
             return JsonSerializer.Deserialize<MissionConfig>(json);
         }
         catch { return null; }
+    }
+
+    private void CheckMinVersion(MissionConfig config)
+    {
+        if (config.MinClientVersion == null || config.UpdateURL == null) return;
+
+        try
+        {
+            var minVersion = new Version(config.MinClientVersion);
+            var appVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0);
+            if (appVersion < minVersion)
+                UpdateRequired?.Invoke(config.UpdateURL);
+        }
+        catch { /* ignore parse errors */ }
     }
 
     public static MissionConfig LoadBundledDefault()

@@ -17,6 +17,7 @@ public class TrayIconManager : IDisposable
     private TrayPopupWindow? _popup;
     private readonly DispatcherTimer _uiTimer;
     private bool _widgetEnabled;
+    private string? _pendingUpdateUrl;
 
     private static readonly string WidgetSettingsFile = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -63,6 +64,15 @@ public class TrayIconManager : IDisposable
             {
                 _widget.UpdateMetrics();
                 _popup?.BuildMetricToggles();
+            });
+        };
+
+        _service.ConfigService.UpdateRequired += url =>
+        {
+            WpfApplication.Current?.Dispatcher.Invoke(() =>
+            {
+                _pendingUpdateUrl = url;
+                _popup?.ShowUpdateBanner(url);
             });
         };
 
@@ -195,6 +205,8 @@ public class TrayIconManager : IDisposable
             };
             _popup.FloatingWidgetCheck.IsChecked = _widgetEnabled;
             _popup.FloatingWidgetToggled += SetWidgetVisible;
+            if (_pendingUpdateUrl != null)
+                _popup.ShowUpdateBanner(_pendingUpdateUrl);
         }
 
         _popup.UpdateUI();

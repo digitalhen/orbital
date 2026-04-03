@@ -5,7 +5,7 @@ namespace Orbital.Services;
 
 public class MissionDataService
 {
-    private readonly MissionConfigService _configService;
+    public MissionConfigService ConfigService { get; }
     private TrajectorySimulator _simulator;
     private TelemetryAPIFetcher? _telemetryFetcher;
 
@@ -22,6 +22,7 @@ public class MissionDataService
     private double? _liveAltitude;
     private double? _liveMoonDist;
     private double? _liveSpeed;
+    private string? _livePhase;
 
     public event Action? DataChanged;
     public event Action? MetricsChanged;
@@ -32,8 +33,8 @@ public class MissionDataService
 
     public MissionDataService()
     {
-        _configService = new MissionConfigService();
-        var config = _configService.Config;
+        ConfigService = new MissionConfigService();
+        var config = ConfigService.Config;
 
         _simulator = new TrajectorySimulator(config);
         if (config.DataSourcesInfo.TelemetryEndpoint is string endpoint)
@@ -43,10 +44,10 @@ public class MissionDataService
         LoadSettings(config);
         ApplyConfig(config);
 
-        _configService.ConfigUpdated += OnConfigUpdate;
+        ConfigService.ConfigUpdated += OnConfigUpdate;
         StartUpdating();
         StartTelemetryPolling(config);
-        _configService.StartPeriodicRefresh();
+        ConfigService.StartPeriodicRefresh();
     }
 
     private void LoadSettings(MissionConfig config)
@@ -127,6 +128,7 @@ public class MissionDataService
         _liveAltitude = null;
         _liveMoonDist = null;
         _liveSpeed = null;
+        _livePhase = null;
 
         StartTelemetryPolling(config);
         ApplyConfig(config);
@@ -163,7 +165,17 @@ public class MissionDataService
     {
         var simData = _simulator.GetData(DateTime.UtcNow);
         Data.MissionElapsedTime = simData.MissionElapsedTime;
-        Data.Phase = simData.Phase;
+        if (_livePhase != null)
+        {
+            var matched = ConfigService.Config.Phases.FirstOrDefault(p => p.Id == _livePhase);
+            Data.Phase = matched != null
+                ? new MissionPhaseInfo { Id = matched.Id, Name = matched.Name, Description = matched.Description, Icon = matched.Icon }
+                : simData.Phase;
+        }
+        else
+        {
+            Data.Phase = simData.Phase;
+        }
         Data.DistanceFromEarth = _liveAltitude ?? simData.DistanceFromEarth;
         Data.DistanceFromMoon = _liveMoonDist ?? simData.DistanceFromMoon;
         Data.Speed = _liveSpeed ?? simData.Speed;
@@ -204,6 +216,8 @@ public class MissionDataService
             _liveMoonDist = telemetry.DistanceToMoon;
         if (telemetry.Speed > 0.01)
             _liveSpeed = telemetry.Speed;
+        if (telemetry.Phase != null)
+            _livePhase = telemetry.Phase;
     }
 
     private class AppSettings

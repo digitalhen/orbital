@@ -18,6 +18,7 @@ public partial class TrayPopupWindow : Window
 {
     private readonly MissionDataService _service;
     private bool _suppressUnitChange;
+    private string? _updateUrl;
 
     public event Action<bool>? FloatingWidgetToggled;
 
@@ -195,6 +196,18 @@ public partial class TrayPopupWindow : Window
     private void TipButton_Click(object sender, RoutedEventArgs e)
     {
         Process.Start(new ProcessStartInfo("https://buymeacoffee.com/digitalhen") { UseShellExecute = true });
+    }
+
+    public void ShowUpdateBanner(string updateUrl)
+    {
+        _updateUrl = updateUrl;
+        UpdateBanner.Visibility = Visibility.Visible;
+    }
+
+    private void UpdateBanner_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (_updateUrl != null)
+            Process.Start(new ProcessStartInfo(_updateUrl) { UseShellExecute = true });
     }
 
     private void QuitButton_Click(object sender, RoutedEventArgs e)
