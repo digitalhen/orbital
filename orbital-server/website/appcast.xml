@@ -4,11 +4,11 @@
         <title>Orbital</title>
         <item>
             <title>1.1</title>
-            <pubDate>Fri, 03 Apr 2026 14:06:21 -0400</pubDate>
+            <pubDate>Fri, 03 Apr 2026 14:12:36 -0400</pubDate>
             <sparkle:version>1</sparkle:version>
             <sparkle:shortVersionString>1.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.1.dmg" length="1794764" type="application/octet-stream" sparkle:edSignature="2WbKFMkoC/CWnONKylhpovCOqJT+XJ1c55ezXiVBnYlGwzea/rYiXnJbTLIQhO5SiQ5xTrPFTY8sakzObp3cBQ=="/>
+            <enclosure url="https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.1.dmg" length="1839557" type="application/octet-stream" sparkle:edSignature="9RvsqNLC5aBBIvlf+aLphuU3A3mpxwjfsTXq+2zvxmHyS1zsdKwf2+LSFjY2Q8I+r5lxgUZXoXa4CMEHKdi3Dg=="/>
         </item>
     </channel>
 </rss>
