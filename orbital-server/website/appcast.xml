@@ -8,7 +8,7 @@
             <sparkle:version>5</sparkle:version>
             <sparkle:shortVersionString>1.2</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.2.dmg" length="1876203" type="application/octet-stream" sparkle:edSignature="BDC0GIWafy2de2je+DqWNwdIvrlRRbo0kfJJC/qOqvpZuEz89eAwFbdjFIrCDWi+9MwxQfStgeHpN6h5v7BICA=="/>
+            <enclosure url="https://apps.cleartextlabs.com/orbital/downloads/Orbital-1.2.dmg" length="1876203" type="application/octet-stream" sparkle:edSignature="C8gbDl0JSIJQL/aTZVQOG72W1D6VhEpLFE4EO+KJsjMkmmER9hDw/fKh3pcbYN0SvFFWlJeIYURMA3YqDMshCg=="/>
         </item>
     </channel>
 </rss>
