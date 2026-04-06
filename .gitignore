@@ -22,6 +22,7 @@ dmg_staging/
 
 # Node
 orbital-server/api/node_modules/
+orbital-server/api/missions/.telemetry-cache.json
 
 # Environment
 .env

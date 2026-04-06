@@ -100,7 +100,21 @@ function derivePhase(met, altitude, distanceToMoon, speed, missionDuration, conf
 let arowFetcher = null;
 let moonService = null;
 let latestTelemetry = null;
+let cachedTelemetry = null;
 let telemetryPollTimer = null;
+
+const TELEMETRY_CACHE_PATH = path.join(__dirname, "missions", ".telemetry-cache.json");
+
+function loadCachedTelemetry() {
+  try {
+    cachedTelemetry = JSON.parse(fs.readFileSync(TELEMETRY_CACHE_PATH, "utf-8"));
+  } catch { /* no cache yet */ }
+}
+
+function saveCachedTelemetry(data) {
+  cachedTelemetry = data;
+  try { fs.writeFileSync(TELEMETRY_CACHE_PATH, JSON.stringify(data)); } catch { /* best-effort */ }
+}
 
 function getUpstreamConfig(config) {
   // Server uses _upstreamSources for the real NASA/JPL URLs,
@@ -125,6 +139,7 @@ function getUpstreamConfig(config) {
 }
 
 function initTelemetry() {
+  loadCachedTelemetry();
   try {
     const config = loadConfig();
     const upstreamConfig = getUpstreamConfig(config);
@@ -218,6 +233,7 @@ async function pollTelemetry() {
       isLive: arow.isLive,
       phase,
     };
+    saveCachedTelemetry(latestTelemetry);
   } catch (err) {
     // Silently continue — telemetry is best-effort
   }
@@ -276,6 +292,12 @@ const server = http.createServer((req, res) => {
         "Cache-Control": "no-cache, no-store",
       });
       res.end(JSON.stringify(latestTelemetry));
+    } else if (cachedTelemetry) {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache, no-store",
+      });
+      res.end(JSON.stringify({ ...cachedTelemetry, stale: true }));
     } else {
       res.writeHead(503, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Telemetry not yet available" }));
