@@ -153,11 +153,8 @@ function initTelemetry() {
     moonService = new MoonPositionService();
 
     if (upstreamConfig.dataSources.moonPosition) {
-      // Use the local proxy endpoint so Moon lookups don't require a direct
-      // outbound route to ssd.jpl.nasa.gov from inside the container.
-      const moonHorizonsURL = `http://localhost:${PORT}/space/api/v1/proxy/horizons`;
       moonService.configure(
-        moonHorizonsURL,
+        upstreamConfig.dataSources.moonPosition.horizonsURL,
         upstreamConfig.dataSources.moonPosition.refreshInterval
       );
     }

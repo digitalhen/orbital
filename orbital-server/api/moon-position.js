@@ -67,6 +67,7 @@ class MoonPositionService {
         MAKE_EPHEM: "YES",
         EPHEM_TYPE: "VECTORS",
         CENTER: "500@399",
+        REF_PLANE: "FRAME",
         START_TIME: start,
         STOP_TIME: stop,
         STEP_SIZE: "1d",
