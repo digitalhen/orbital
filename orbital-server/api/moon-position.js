@@ -103,14 +103,13 @@ class MoonPositionService {
   }
 
   _parseVectorLine(line) {
-    const parts = line.trim().split(/\s+/).filter(Boolean);
-    let x = null, y = null, z = null;
-
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i] === "X" && i + 2 < parts.length) x = parseFloat(parts[i + 2]);
-      if (parts[i] === "Y" && i + 2 < parts.length) y = parseFloat(parts[i + 2]);
-      if (parts[i] === "Z" && i + 2 < parts.length) z = parseFloat(parts[i + 2]);
-    }
+    // Extract values using regex to handle both "X = 1.23" and "X =1.23" formats
+    const xm = line.match(/X\s*=\s*([^\s]+)/);
+    const ym = line.match(/Y\s*=\s*([^\s]+)/);
+    const zm = line.match(/Z\s*=\s*([^\s]+)/);
+    let x = xm ? parseFloat(xm[1]) : null;
+    let y = ym ? parseFloat(ym[1]) : null;
+    let z = zm ? parseFloat(zm[1]) : null;
 
     if (x === null || y === null || z === null) return null;
     const dist = Math.sqrt(x * x + y * y + z * z);

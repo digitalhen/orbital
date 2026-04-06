@@ -118,14 +118,17 @@ actor MoonPositionService {
     }
 
     private func parseVectorLine(_ line: String) -> MoonState? {
-        // Format: " X = 1.234E+05 Y = 5.678E+04 Z = 9.012E+03"
-        let parts = line.components(separatedBy: CharacterSet.whitespaces).filter { !$0.isEmpty }
-
+        // Handle both "X = 1.234E+05" and "X =1.234E+05" formats
+        let pattern = /([XYZ])\s*=\s*([^\s]+)/
         var x: Double?, y: Double?, z: Double?
-        for i in 0..<parts.count {
-            if parts[i] == "X" && i + 2 < parts.count, let v = Double(parts[i + 2]) { x = v }
-            if parts[i] == "Y" && i + 2 < parts.count, let v = Double(parts[i + 2]) { y = v }
-            if parts[i] == "Z" && i + 2 < parts.count, let v = Double(parts[i + 2]) { z = v }
+        for match in line.matches(of: pattern) {
+            guard let v = Double(match.output.2) else { continue }
+            switch match.output.1 {
+            case "X": x = v
+            case "Y": y = v
+            case "Z": z = v
+            default: break
+            }
         }
 
         guard let px = x, let py = y, let pz = z else { return nil }
