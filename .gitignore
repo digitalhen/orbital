@@ -28,6 +28,8 @@ orbital-server/api/missions/.telemetry-cache.json
 .env
 
 # Build artifacts
+*.dmg
+*.msi
 Orbital-*.pkg
 Orbital-notarize.zip
 website/screenshot-*.png

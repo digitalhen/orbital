@@ -6,4 +6,3 @@ COPY install.sh /usr/share/nginx/html/orbital/install.sh
 COPY hero.png /usr/share/nginx/html/orbital/hero.png
 COPY privacy.html /usr/share/nginx/html/orbital/privacy.html
 COPY appcast.xml /usr/share/nginx/html/orbital/appcast.xml
-COPY downloads/ /usr/share/nginx/html/orbital/downloads/
