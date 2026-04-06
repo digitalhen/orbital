@@ -52,7 +52,7 @@ actor MoonPositionService {
         let soon = now.addingTimeInterval(60)
 
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd HH:mm"
+        df.dateFormat = "yyyy-MM-dd'T'HH:mm"
         df.timeZone = TimeZone(identifier: "UTC")
         let start = df.string(from: now)
         let stop = df.string(from: soon)
@@ -66,6 +66,7 @@ actor MoonPositionService {
             URLQueryItem(name: "MAKE_EPHEM", value: "'YES'"),
             URLQueryItem(name: "EPHEM_TYPE", value: "'VECTORS'"),
             URLQueryItem(name: "CENTER", value: "'500@399'"),
+            URLQueryItem(name: "REF_PLANE", value: "'FRAME'"),
             URLQueryItem(name: "START_TIME", value: "'\(start)'"),
             URLQueryItem(name: "STOP_TIME", value: "'\(stop)'"),
             URLQueryItem(name: "STEP_SIZE", value: "'1d'"),
