@@ -58,15 +58,15 @@ class MoonPositionService {
 
       const params = new URLSearchParams({
         format: "json",
-        COMMAND: "'301'",
-        OBJ_DATA: "'NO'",
-        MAKE_EPHEM: "'YES'",
-        EPHEM_TYPE: "'VECTORS'",
-        CENTER: "'500@399'",
-        START_TIME: `'${start}'`,
-        STOP_TIME: `'${stop}'`,
-        STEP_SIZE: "'1d'",
-        VEC_TABLE: "'1'",
+        COMMAND: "301",
+        OBJ_DATA: "NO",
+        MAKE_EPHEM: "YES",
+        EPHEM_TYPE: "VECTORS",
+        CENTER: "500@399",
+        START_TIME: start,
+        STOP_TIME: stop,
+        STEP_SIZE: "1d",
+        VEC_TABLE: "1",
       });
 
       const url = `${this.horizonsBaseURL}?${params.toString()}`;
