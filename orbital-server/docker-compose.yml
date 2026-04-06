@@ -7,6 +7,4 @@ services:
 
   orbital-website:
     build: ./website
-    volumes:
-      - ./downloads:/usr/share/nginx/html/orbital/downloads
     restart: unless-stopped
