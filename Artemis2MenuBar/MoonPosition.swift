@@ -49,13 +49,13 @@ actor MoonPositionService {
 
     private func fetchFromHorizons() async -> MoonState? {
         let now = Date()
-        let tomorrow = now.addingTimeInterval(86400)
+        let soon = now.addingTimeInterval(60)
 
         let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd"
+        df.dateFormat = "yyyy-MM-dd HH:mm"
         df.timeZone = TimeZone(identifier: "UTC")
         let start = df.string(from: now)
-        let stop = df.string(from: tomorrow)
+        let stop = df.string(from: soon)
 
         // Build URL with properly encoded query parameters
         var components = URLComponents(string: horizonsBaseURL)!
