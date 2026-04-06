@@ -337,9 +337,13 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: "No upstream horizons source configured" }));
         return;
       }
-      // Forward query string from client to upstream
-      const qs = url.search || "";
-      const fetchURL = `${baseURL}${qs}`;
+      // Forward query string, stripping legacy Horizons batch-file single quotes
+      // e.g. COMMAND='301' → COMMAND=301 (REST API doesn't accept quoted values)
+      const params = new URLSearchParams(url.search || "");
+      for (const [key, val] of params.entries()) {
+        params.set(key, val.replace(/^'(.*)'$/, "$1"));
+      }
+      const fetchURL = `${baseURL}?${params.toString()}`;
       proxyGet(fetchURL, res);
     } catch (err) {
       res.writeHead(502, { "Content-Type": "application/json" });
