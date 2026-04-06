@@ -54,8 +54,8 @@ class MoonPositionService {
     try {
       const now = new Date();
       const soon = new Date(now.getTime() + 60000); // +1 minute
-      // Use full ISO timestamps so Horizons returns position at current time
-      const fmt = (d) => d.toISOString().replace("T", " ").replace("Z", "");
+      // Use ISO timestamps with T separator (Horizons rejects spaces in URL params)
+      const fmt = (d) => d.toISOString().slice(0, 16);
       const start = fmt(now);
       const stop = fmt(soon);
 
