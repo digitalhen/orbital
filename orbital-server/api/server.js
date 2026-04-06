@@ -254,8 +254,9 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(clientConfig));
     } catch (err) {
+      console.error("Failed to load config:", err.message);
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to load config" }));
+      res.end(JSON.stringify({ error: "Failed to load config", detail: err.message }));
     }
     return;
   }
