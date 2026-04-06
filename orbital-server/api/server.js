@@ -256,7 +256,7 @@ const server = http.createServer((req, res) => {
     } catch (err) {
       console.error("Failed to load config:", err.message);
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to load config", detail: err.message }));
+      res.end(JSON.stringify({ error: "Failed to load config" }));
     }
     return;
   }
