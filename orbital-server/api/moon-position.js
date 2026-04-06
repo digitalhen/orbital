@@ -111,7 +111,13 @@ class MoonPositionService {
     const dist = Math.sqrt(x * x + y * y + z * z);
     if (dist <= 300000) return null;
 
-    return { x, y, z };
+    // Horizons returns ecliptic J2000 by default; rotate to equatorial J2000
+    // (EME2000 / ICRF) to match the AROW spacecraft coordinate frame.
+    // Rotation: X axis by obliquity ε = 23.43929° (J2000.0)
+    const eps = 23.43929 * (Math.PI / 180);
+    const cosE = Math.cos(eps);
+    const sinE = Math.sin(eps);
+    return { x, y: y * cosE - z * sinE, z: y * sinE + z * cosE };
   }
 
   /** Simple approximate Moon position when Horizons is unavailable. */
