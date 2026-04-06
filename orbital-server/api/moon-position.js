@@ -36,7 +36,8 @@ class MoonPositionService {
 
     const fallback = this._approximateMoonPosition();
     this.cached = fallback;
-    this.lastFetch = Date.now();
+    // Cache fallback for only 5 minutes so we retry Horizons soon
+    this.lastFetch = Date.now() - this.refreshInterval + 300000;
     return fallback;
   }
 

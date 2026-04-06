@@ -75,13 +75,6 @@ function waypointPhase(met, config) {
 }
 
 function derivePhase(met, altitude, distanceToMoon, speed, missionDuration, config) {
-  const moonApproaching =
-    prevPollData &&
-    distanceToMoon > 0 &&
-    prevPollData.distanceToMoon > 0
-      ? distanceToMoon < prevPollData.distanceToMoon
-      : null;
-
   if (met < 0) return "prelaunch";
   if (met < 600) return "ascent";
   if (met >= missionDuration) return "missionComplete";
@@ -94,25 +87,12 @@ function derivePhase(met, altitude, distanceToMoon, speed, missionDuration, conf
   if (altitude < 200 && speed > 3 && met > missionDuration * 0.8)
     return "reentry";
 
-  // Lunar flyby — very close to Moon
-  if (distanceToMoon > 0 && distanceToMoon < 10000) return "lunarFlyby";
-
-  // Lunar approach — closing on Moon within 50k km
-  if (distanceToMoon > 0 && distanceToMoon < 50000 && moonApproaching === true)
-    return "lunarApproach";
-
-  // Return coast — receding from Moon, past mid-mission
-  if (moonApproaching === false && met > missionDuration * 0.4)
-    return "returnCoast";
-
-  // Outbound coast — heading toward Moon, well above low Earth orbit
-  if (moonApproaching === true && altitude > 2000) return "outboundCoast";
-
   // TLI — high speed near Earth (brief burn, may not always be caught)
   if (speed > 10 && altitude < 2000 && altitude > 160)
     return "translunarInjection";
 
-  // Fall back to config waypoint phase instead of guessing
+  // Defer to waypoint phase for coast/approach/flyby/return — waypoints are
+  // derived from the actual OEM trajectory and encode the correct boundaries.
   return waypointPhase(met, config) || "earthOrbit";
 }
 
@@ -158,8 +138,11 @@ function initTelemetry() {
     moonService = new MoonPositionService();
 
     if (upstreamConfig.dataSources.moonPosition) {
+      // Use the local proxy endpoint so Moon lookups don't require a direct
+      // outbound route to ssd.jpl.nasa.gov from inside the container.
+      const moonHorizonsURL = `http://localhost:${PORT}/space/api/v1/proxy/horizons`;
       moonService.configure(
-        upstreamConfig.dataSources.moonPosition.horizonsURL,
+        moonHorizonsURL,
         upstreamConfig.dataSources.moonPosition.refreshInterval
       );
     }
