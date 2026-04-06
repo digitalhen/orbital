@@ -327,6 +327,10 @@ const server = http.createServer((req, res) => {
       for (const [key, val] of params.entries()) {
         params.set(key, val.replace(/^'(.*)'$/, "$1"));
       }
+      // Force equatorial J2000 (ICRF) frame to match AROW spacecraft coordinates
+      if (!params.has("REF_PLANE")) {
+        params.set("REF_PLANE", "FRAME");
+      }
       const fetchURL = `${baseURL}?${params.toString()}`;
       proxyGet(fetchURL, res);
     } catch (err) {
