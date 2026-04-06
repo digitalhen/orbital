@@ -1,4 +1,5 @@
 const https = require("https");
+const http = require("http");
 
 /**
  * Moon position service using JPL Horizons API with analytical fallback.
@@ -143,7 +144,8 @@ class MoonPositionService {
 
   _httpGet(url, timeout) {
     return new Promise((resolve, reject) => {
-      const req = https.get(url, { timeout }, (res) => {
+      const client = url.startsWith("https") ? https : http;
+      const req = client.get(url, { timeout }, (res) => {
         if (res.statusCode !== 200) {
           res.resume();
           return reject(new Error(`HTTP ${res.statusCode}`));
