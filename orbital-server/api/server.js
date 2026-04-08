@@ -165,6 +165,23 @@ function initTelemetry() {
     // Initial fetch
     pollTelemetry();
     telemetryPollTimer = setInterval(pollTelemetry, pollInterval);
+
+    // Watchdog: reinitialize polling if telemetry goes stale (>5 min without success)
+    setInterval(() => {
+      const data = latestTelemetry || cachedTelemetry;
+      if (!data) return;
+      const age = Date.now() - new Date(data.timestamp).getTime();
+      if (age > 5 * 60 * 1000) {
+        console.warn(`  Telemetry watchdog: data is ${Math.round(age / 1000)}s old, reinitializing poller`);
+        clearInterval(telemetryPollTimer);
+        arowFetcher = new AROWFetcher(getUpstreamConfig(loadConfig()));
+        moonService = new MoonPositionService();
+        const mc = loadConfig().dataSources.moonPosition;
+        if (mc) moonService.configure(mc.horizonsURL, mc.refreshInterval);
+        pollTelemetry();
+        telemetryPollTimer = setInterval(pollTelemetry, pollInterval);
+      }
+    }, 60000);
   } catch (err) {
     console.error("  Telemetry: failed to initialize:", err.message);
   }
@@ -367,8 +384,21 @@ const server = http.createServer((req, res) => {
       url.pathname === "/api/v1/health") &&
     req.method === "GET"
   ) {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ status: "ok" }));
+    // Fail health check if telemetry polling has been stale for >10 minutes
+    // Docker will restart the container to recover
+    const telemetryData = latestTelemetry || cachedTelemetry;
+    const telemetryAge = telemetryData
+      ? (Date.now() - new Date(telemetryData.timestamp).getTime()) / 1000
+      : null;
+    const telemetryHealthy = telemetryAge !== null && telemetryAge < 600;
+
+    const status = telemetryHealthy ? "ok" : "degraded";
+    const code = telemetryHealthy ? 200 : 503;
+    res.writeHead(code, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      status,
+      telemetryAge: telemetryAge !== null ? Math.round(telemetryAge) : null,
+    }));
     return;
   }
 
