@@ -180,7 +180,10 @@ async function pollTelemetry() {
     arowFetcher.configure(upstreamConfig);
 
     const arow = await arowFetcher.fetch();
-    if (!arow) return;
+    if (!arow) {
+      console.warn("  Telemetry poll: AROW fetch returned no data");
+      return;
+    }
 
     const earthRadius = config.trajectory?.earthRadius ?? 6371.0;
     const altitude = arow.distanceFromEarthCenter - earthRadius;
@@ -232,7 +235,7 @@ async function pollTelemetry() {
     };
     saveCachedTelemetry(latestTelemetry);
   } catch (err) {
-    // Silently continue — telemetry is best-effort
+    console.error("  Telemetry poll error:", err.message);
   }
 }
 
@@ -279,7 +282,13 @@ const server = http.createServer((req, res) => {
       url.pathname === "/api/v1/mission/telemetry") &&
     req.method === "GET"
   ) {
-    if (latestTelemetry) {
+    // Mark telemetry as stale if the last successful poll was too long ago
+    const telemetryData = latestTelemetry || cachedTelemetry;
+    const isStale = telemetryData
+      ? (Date.now() - new Date(telemetryData.timestamp).getTime()) > 5 * 60 * 1000
+      : true;
+
+    if (telemetryData) {
       const clientId = ua.includes("Orbital/")
         ? ua.replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 64)
         : "api-client";
@@ -288,13 +297,7 @@ const server = http.createServer((req, res) => {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache, no-store",
       });
-      res.end(JSON.stringify(latestTelemetry));
-    } else if (cachedTelemetry) {
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache, no-store",
-      });
-      res.end(JSON.stringify({ ...cachedTelemetry, stale: true }));
+      res.end(JSON.stringify(isStale ? { ...telemetryData, stale: true } : telemetryData));
     } else {
       res.writeHead(503, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Telemetry not yet available" }));

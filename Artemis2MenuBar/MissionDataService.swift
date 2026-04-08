@@ -189,6 +189,16 @@ class MissionDataService: ObservableObject {
                         self.liveSpeed = arowData.speed
                     }
                 }
+                return
+            }
+
+            // Both sources failed — clear live overrides so simulation takes over
+            await MainActor.run {
+                self.isLive = false
+                self.liveAltitude = nil
+                self.liveMoonDist = nil
+                self.liveSpeed = nil
+                self.livePhase = nil
             }
         }
     }

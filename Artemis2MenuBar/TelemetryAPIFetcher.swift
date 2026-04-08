@@ -10,6 +10,7 @@ actor TelemetryAPIFetcher {
         var speed: Double = 0
         var isLive: Bool = false
         var phase: String?
+        var stale: Bool = false
     }
 
     private var endpointURL: String
@@ -52,6 +53,20 @@ actor TelemetryAPIFetcher {
 
     private func parse(_ data: Data) -> TelemetryData? {
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
+
+        // Reject stale data — fall back to simulation instead of showing outdated values
+        if json["stale"] as? Bool == true {
+            return nil
+        }
+
+        // Also reject if timestamp is more than 5 minutes old
+        if let timestamp = json["timestamp"] as? String {
+            let df = ISO8601DateFormatter()
+            if let date = df.date(from: timestamp),
+               Date().timeIntervalSince(date) > 5 * 60 {
+                return nil
+            }
+        }
 
         var result = TelemetryData()
         result.altitude = json["altitude"] as? Double ?? 0
